@@ -1,0 +1,20 @@
+{
+  "name": "e-invitation",
+  "version": "1.0.0",
+  "description": "គម្រោងគេហទំព័រ E-Wedding Invitation ទំនើប ស្រស់ស្អាត (Modern Khmer Luxury Aesthetic) បត់បែនបានខ្ពស់ និងងាយស្រួលកែប្រែទិន្នន័យសម្រាប់អតិថិជនម្នាក់ៗ។",
+  "main": "google-apps-script.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.1",
+    "vite": "^8.3.4"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.27"
+  }
+}
