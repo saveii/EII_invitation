@@ -211,14 +211,49 @@ body[data-lang="en"] {
 }
 
 .hud__mono {
-  width: 44px;
-  height: 44px;
-  display: block;
+  width: 96px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.3s var(--ease-silk);
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
 }
 
-.hud__mono svg {
+.hud__mono:hover {
+  transform: scale(1.04);
+}
+
+.hud__mono .lockup.lk-hud {
   width: 100%;
-  height: 100%;
+  height: auto;
+}
+
+.lk-hud .lk-name {
+  font-size: 26cqw;
+  font-weight: bold;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9));
+}
+
+.lk-hud .lk-groom {
+  top: 3%;
+  left: 2%;
+}
+
+.lk-hud .lk-bride {
+  top: 44%;
+  right: 2%;
+  font-size: 25cqw;
+}
+
+.lk-hud .lk-swash {
+  stroke-width: 4.5px;
+}
+
+.lk-hud .lk-butterfly {
+  width: 18%;
+  top: 12%;
+  right: 2%;
 }
 
 .hud__right {

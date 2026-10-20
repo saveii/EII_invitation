@@ -77,10 +77,21 @@ function updateLanguage(newLang) {
   const brideFull = weddingData.couple.bride[currentLang === "km" ? "km" : "en"];
   document.title = `${t.kicker} · ${groomFull} & ${brideFull}`;
 
-  // Update HUD text
+  // Update HUD text & monogram logo
   const langText = document.querySelector(".lang-text");
   if (langText) {
     langText.textContent = currentLang === "km" ? "ខ្មែរ / EN" : "EN / ខ្មែរ";
+  }
+  const hudMono = document.getElementById("hud-mono");
+  if (hudMono) {
+    const groomShort = weddingData.couple.groom[currentLang === "km" ? "shortKm" : "shortEn"];
+    const brideShort = weddingData.couple.bride[currentLang === "km" ? "shortKm" : "shortEn"];
+    hudMono.innerHTML = createNameLogoLockup({
+      groom: groomShort,
+      bride: brideShort,
+      cls: "lk-hud",
+      crest: false
+    });
   }
 
   // Update Gate Texts if still open
