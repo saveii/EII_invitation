@@ -32,25 +32,72 @@ export function renderStory(container, { wedding, lang = "km" }) {
         ${createDividerSvg("sec-story__divider")}
       </div>
 
-      <div class="story-scroll-wrap">
+      <div class="story-scroll-wrap" id="story-scroll-wrap">
         <div class="story-track" id="story-track">
           ${cardsHtml}
         </div>
       </div>
 
-      <div class="story-dots" id="story-dots" aria-hidden="true">
-        ${stories.map((_, i) => `<span class="s-dot ${i === 0 ? "is-active" : ""}"></span>`).join("")}
+      <div class="story-dots" id="story-dots" role="tablist" aria-label="Story cards pagination">
+        ${stories.map((_, i) => `<button type="button" class="s-dot ${i === 0 ? "is-active" : ""}" role="tab" aria-selected="${i === 0}" aria-label="Slide ${i + 1}"></button>`).join("")}
       </div>
     </section>
   `;
 
-  // Attach scroll listener for dots
-  const track = document.getElementById("story-track");
-  const dots = document.querySelectorAll("#story-dots .s-dot");
-  if (track && dots.length) {
-    track.addEventListener("scroll", () => {
-      const idx = Math.round(track.scrollLeft / (track.offsetWidth * 0.75));
-      dots.forEach((dot, i) => dot.classList.toggle("is-active", i === idx));
+  // Attach smooth scroll listener and dot navigation
+  const wrap = container.querySelector(".story-scroll-wrap");
+  const cards = container.querySelectorAll(".story-card");
+  const dots = container.querySelectorAll(".s-dot");
+
+  if (wrap && cards.length && dots.length) {
+    let ticking = false;
+
+    function updateActive() {
+      const wrapRect = wrap.getBoundingClientRect();
+      const wrapCenter = wrapRect.left + wrapRect.width / 2;
+      let closestIdx = 0;
+      let minDiff = Infinity;
+
+      cards.forEach((card, i) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const diff = Math.abs(cardCenter - wrapCenter);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = i;
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        const isActive = i === closestIdx;
+        dot.classList.toggle("is-active", isActive);
+        dot.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      cards.forEach((card, i) => {
+        card.classList.toggle("is-active", i === closestIdx);
+      });
+
+      ticking = false;
+    }
+
+    wrap.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
     }, { passive: true });
+
+    // Click dot to navigate smoothly to card
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        if (cards[i]) {
+          cards[i].scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+      });
+    });
+
+    // Initial sync
+    updateActive();
   }
 }

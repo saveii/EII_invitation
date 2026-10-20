@@ -13,10 +13,12 @@ export function renderCandlelight(container, { wedding, lang = "km" }) {
   const storedCount = localStorage.getItem("khmer_wedding_candles");
   if (storedCount) candleCount = parseInt(storedCount, 10);
 
+  const hasPhoto = Boolean(wedding.candlelightPhoto);
+
   container.innerHTML = `
-    <section class="sec sec-candlelight" id="candlelight" aria-label="Candlelight Reflection">
+    <section class="sec sec-candlelight ${hasPhoto ? "has-photo" : "no-photo"}" id="candlelight" aria-label="Candlelight Reflection">
       <div class="candlelight-bg">
-        <img src="${wedding.candlelightPhoto || "/images/candlelight.jpg"}" alt="Candlelight Reflection" loading="lazy" />
+        ${hasPhoto ? `<img src="${wedding.candlelightPhoto}" alt="Candlelight Reflection" loading="lazy" />` : ""}
         <div class="candlelight-shade"></div>
       </div>
 

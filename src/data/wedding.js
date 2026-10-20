@@ -228,7 +228,7 @@ export const weddingData = {
   },
 
   archPhoto: "/images/couple.jpg",
-  candlelightPhoto: "/images/candlelight.jpg",
+  candlelightPhoto: null, // Left out as requested (ទុកសិន)
   heroPhoto: "/images/couple.jpg",
   music: "/audio/wedding-melody.mp3",
   siteUrl: "https://eii-invitation.vercel.app"
