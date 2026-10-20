@@ -1233,11 +1233,19 @@ body[data-lang="en"] {
 
 .couple-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2.2rem;
-  max-width: 900px;
+  grid-template-columns: repeat(2, minmax(0, 360px));
+  justify-content: center;
+  gap: 2.8rem;
+  max-width: 820px;
   margin: 0 auto;
-  align-items: start;
+  align-items: stretch;
+}
+
+@media (max-width: 680px) {
+  .couple-grid {
+    grid-template-columns: minmax(0, 340px);
+    gap: 2rem;
+  }
 }
 
 .couple-card {
@@ -1250,6 +1258,8 @@ body[data-lang="en"] {
   backdrop-filter: blur(10px);
   box-shadow: 0 12px 35px rgba(0,0,0,0.35);
   transition: transform 0.4s var(--ease-silk);
+  display: flex;
+  flex-direction: column;
 }
 
 .couple-card:hover {
@@ -1263,7 +1273,7 @@ body[data-lang="en"] {
   aspect-ratio: 3 / 4;
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.2rem;
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 
@@ -1293,27 +1303,33 @@ body[data-lang="en"] {
 .couple-card__corners .kb-bl { bottom: 6px; left: 6px; }
 .couple-card__corners .kb-br { bottom: 6px; right: 6px; }
 
-.couple-card__role {
-  font-family: var(--f-serif);
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.8rem;
-  color: var(--foil);
+.couple-card__info {
+  margin-top: auto;
 }
 
 .couple-card__name {
   font-family: var(--f-moul);
-  font-size: clamp(1.25rem, 2.8vw, 1.55rem);
-  line-height: 2;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  line-height: 1.8;
   margin: 0.2rem 0;
+  color: var(--foil-hi);
 }
 
 .couple-card__en {
   font-family: var(--f-script);
-  font-size: 1.4rem;
-  color: var(--foil-hi);
-  margin-top: -0.3rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.35rem;
+  color: var(--foil);
+  margin-top: -0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.couple-card__parents {
+  font-family: var(--f-body);
+  color: var(--cream-dim);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0 0.5rem;
 }
 
 .couple-card__quote {
@@ -1326,14 +1342,7 @@ body[data-lang="en"] {
 }
 
 .couple-interlock {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.couple-interlock__svg {
-  width: 60px;
-  height: 60px;
+  display: none;
 }
 
 .sec-butterfly-cue {

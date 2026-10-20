@@ -1,6 +1,6 @@
 /**
  * Section 4: The Couple (កូនកំលោះ & កូនក្រមុំ)
- * Individual portrait cards, roles, quotes, and interactive fluttering butterfly
+ * Individual portrait cards side-by-side, roles, names, and parent honors
  */
 
 import { createButterflySvg, createCornerSvg } from "./ornaments.js";
@@ -9,6 +9,19 @@ export function renderCouple(container, { wedding, lang = "km" }) {
   const isKm = lang === "km";
   const groom = wedding.couple.groom;
   const bride = wedding.couple.bride;
+  const gParents = wedding.families?.groom;
+  const bParents = wedding.families?.bride;
+
+  const groomTitle = isKm ? (groom.titleKm || "លោក") : (groom.titleEn || "Mr.");
+  const brideTitle = isKm ? (bride.titleKm || "អ្នកនាង") : (bride.titleEn || "Ms.");
+
+  const groomHonor = isKm
+    ? (groom.parentHonorKm || (gParents ? `បុត្រ ${gParents.father.km} និង ${gParents.mother.km}` : "បុត្រ លោក ................... និង លោកស្រី ....."))
+    : (groom.parentHonorEn || (gParents ? `Son of ${gParents.father.en} & ${gParents.mother.en}` : "Son of ..."));
+
+  const brideHonor = isKm
+    ? (bride.parentHonorKm || (bParents ? `បុត្រី ${bParents.father.km} និង ${bParents.mother.km}` : "បុត្រី លោក ................... និង លោកស្រី ....."))
+    : (bride.parentHonorEn || (bParents ? `Daughter of ${bParents.father.en} & ${bParents.mother.en}` : "Daughter of ..."));
 
   container.innerHTML = `
     <section class="sec sec-couple" id="couple" aria-label="The Bride and Groom">
@@ -34,23 +47,11 @@ export function renderCouple(container, { wedding, lang = "km" }) {
             </div>
           </div>
           <div class="couple-card__info">
-            <span class="couple-card__role">${groom[isKm ? "roleKm" : "roleEn"]}</span>
-            <h3 class="couple-card__name foil">${groom[lang]}</h3>
+            <h3 class="couple-card__name foil">${groomTitle} ${groom[lang]}</h3>
             <p class="couple-card__en">${groom.en}</p>
-            <blockquote class="couple-card__quote">
-              ${groom[isKm ? "quoteKm" : "quoteEn"]}
-            </blockquote>
+            <p class="couple-card__parents">${groomHonor}</p>
           </div>
         </article>
-
-        <!-- Center Monogram Heart Symbol -->
-        <div class="couple-interlock" aria-hidden="true">
-          <svg viewBox="0 0 100 100" class="couple-interlock__svg">
-            <path d="M50 82 C50 82 18 56 18 34 C18 20 28 14 38 18 C46 22 50 30 50 30 C50 30 54 22 62 18 C72 14 82 20 82 34 C82 56 50 82 50 82 Z"
-              fill="none" stroke="url(#g-foil)" stroke-width="2" stroke-dasharray="4 3"/>
-            <circle cx="50" cy="46" r="4" fill="url(#g-foil)"/>
-          </svg>
-        </div>
 
         <!-- Bride Card -->
         <article class="couple-card couple-card--bride" data-reveal="fade-up">
@@ -67,15 +68,13 @@ export function renderCouple(container, { wedding, lang = "km" }) {
             </div>
           </div>
           <div class="couple-card__info">
-            <span class="couple-card__role">${bride[isKm ? "roleKm" : "roleEn"]}</span>
-            <h3 class="couple-card__name foil">${bride[lang]}</h3>
+            <h3 class="couple-card__name foil">${brideTitle} ${bride[lang]}</h3>
             <p class="couple-card__en">${bride.en}</p>
-            <blockquote class="couple-card__quote">
-              ${bride[isKm ? "quoteKm" : "quoteEn"]}
-            </blockquote>
+            <p class="couple-card__parents">${brideHonor}</p>
           </div>
         </article>
       </div>
     </section>
   `;
 }
+

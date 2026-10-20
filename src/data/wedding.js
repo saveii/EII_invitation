@@ -7,6 +7,8 @@ export const weddingData = {
     groom: {
       km: "ទេព សុធា",
       en: "Tep Sothea",
+      titleKm: "លោក",
+      titleEn: "Mr.",
       shortKm: "សុធា",
       shortEn: "Sothea",
       initialKm: "ស",
@@ -14,12 +16,16 @@ export const weddingData = {
       roleKm: "កូនប្រុស",
       roleEn: "Groom",
       photo: "/images/groom.jpg",
+      parentHonorKm: "បុត្រ លោក ទេព សុខា និង លោកស្រី ម៉ៅ សុភី",
+      parentHonorEn: "Son of Mr. Tep Sokha & Mrs. Mao Sophy",
       quoteKm: "«ខ្ញុំសន្យាថានឹងស្រឡាញ់ ការពារ និងមើលថែអូនអស់មួយជីវិត»",
       quoteEn: "“I promise to love, protect, and cherish you for all of our days.”"
     },
     bride: {
       km: "ចាយ វិច្ឆិកា",
       en: "Chay Vicheka",
+      titleKm: "អ្នកនាង",
+      titleEn: "Ms.",
       shortKm: "វិច្ឆិកា",
       shortEn: "Vicheka",
       initialKm: "វ",
@@ -27,6 +33,8 @@ export const weddingData = {
       roleKm: "កូនស្រី",
       roleEn: "Bride",
       photo: "/images/bride.jpg",
+      parentHonorKm: "បុត្រី លោក ចាយ គឹមហុង និង លោកស្រី ង៉ែត ស៊ីណា",
+      parentHonorEn: "Daughter of Mr. Chay Kimhong & Mrs. Ngat Sina",
       quoteKm: "«ក្តីស្រឡាញ់ដ៏កក់ក្តៅរបស់បង ជាជម្រកដ៏មានសុភមង្គលបំផុតរបស់អូន»",
       quoteEn: "“In your gentle warmth, I found my forever home and true happiness.”"
     }
@@ -226,5 +234,6 @@ export const weddingData = {
   archPhoto: "/images/couple.jpg",
   candlelightPhoto: "/images/candlelight.jpg",
   heroPhoto: "/images/couple.jpg",
+  music: "/audio/wedding-melody.mp3",
   siteUrl: "https://theapka-wedding.vercel.app"
 };
