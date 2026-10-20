@@ -823,14 +823,45 @@ body[data-lang="en"] {
 .hero__media {
   position: absolute;
   inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--night);
+  overflow: hidden;
+}
+
+.hero__media::before {
+  content: "";
+  position: absolute;
+  inset: -30px;
+  background-image: url("/images/couple.jpg");
+  background-position: center 20%;
+  background-size: cover;
+  filter: blur(40px) brightness(0.42) saturate(1.1);
+  transform: scale(1.15);
+  opacity: 0.95;
 }
 
 .hero__media img {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 40%;
-  transform: scale(1.06);
+  object-position: center 8%;
+  transform: scale(1);
+}
+
+@media (min-width: 860px) {
+  .hero__media img {
+    width: auto;
+    max-width: min(860px, 70vw);
+    height: 100%;
+    object-fit: contain;
+    object-position: center top;
+    filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.7));
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
 }
 
 .hero__shade {
@@ -838,12 +869,11 @@ body[data-lang="en"] {
   inset: 0;
   background:
     linear-gradient(to bottom,
-      rgba(18, 16, 12, 0.78) 0%,
-      rgba(18, 16, 12, 0.45) 30%,
-      rgba(18, 16, 12, 0.25) 55%,
-      rgba(18, 16, 12, 0.85) 100%
-    ),
-    radial-gradient(80% 60% at 50% 40%, transparent 0%, rgba(0,0,0,0.5) 100%);
+      rgba(18, 16, 12, 0.65) 0%,
+      rgba(18, 16, 12, 0.35) 30%,
+      rgba(18, 16, 12, 0.22) 55%,
+      rgba(18, 16, 12, 0.8) 100%
+    );
 }
 
 .hero__embers {

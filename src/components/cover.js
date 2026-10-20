@@ -95,7 +95,7 @@ export function renderCover(container, { wedding, lang = "km" }) {
 export function animateCoverEntrance() {
   const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
-  tl.fromTo("#hero-media img", { scale: 1.15 }, { scale: 1.05, duration: 2.8 }, 0);
+  tl.fromTo("#hero-media img", { scale: 1.04 }, { scale: 1.0, duration: 2.5 }, 0);
   tl.from(".cover__corners .kbach-corner", { opacity: 0, scale: 0.7, duration: 1.2, stagger: 0.08 }, 0.2);
   tl.from(".cover__crest", { opacity: 0, y: 20, duration: 1 }, 0.4);
   tl.from(".cover__kicker, .cover__sub", { opacity: 0, y: 15, duration: 0.9, stagger: 0.1 }, 0.6);
