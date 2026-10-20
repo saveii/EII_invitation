@@ -7,16 +7,14 @@ export const weddingData = {
     groom: {
       km: "ទេព សុធា",
       en: "Tep Sothea",
-      titleKm: "លោក",
-      titleEn: "Mr.",
       shortKm: "សុធា",
       shortEn: "Sothea",
       initialKm: "ស",
       initialEn: "S",
-      roleKm: "កូនប្រុស",
+      roleKm: "កូនកំលោះ",
       roleEn: "Groom",
       photo: "/images/groom.jpg",
-      parentHonorKm: "បុត្រ លោក ទេព សុខា និង លោកស្រី ម៉ៅ សុភី",
+      parentHonorKm: "ជាកូនប្រុសរបស់ លោក ទេព សុខា និង លោកស្រី ម៉ៅ សុភី",
       parentHonorEn: "Son of Mr. Tep Sokha & Mrs. Mao Sophy",
       quoteKm: "«ខ្ញុំសន្យាថានឹងស្រឡាញ់ ការពារ និងមើលថែអូនអស់មួយជីវិត»",
       quoteEn: "“I promise to love, protect, and cherish you for all of our days.”"
@@ -24,16 +22,14 @@ export const weddingData = {
     bride: {
       km: "ចាយ វិច្ឆិកា",
       en: "Chay Vicheka",
-      titleKm: "អ្នកនាង",
-      titleEn: "Ms.",
       shortKm: "វិច្ឆិកា",
       shortEn: "Vicheka",
       initialKm: "វ",
       initialEn: "V",
-      roleKm: "កូនស្រី",
+      roleKm: "កូនក្រមុំ",
       roleEn: "Bride",
       photo: "/images/bride.jpg",
-      parentHonorKm: "បុត្រី លោក ចាយ គឹមហុង និង លោកស្រី ង៉ែត ស៊ីណា",
+      parentHonorKm: "ជាកូនស្រីរបស់ លោក ចាយ គឹមហុង និង លោកស្រី ង៉ែត ស៊ីណា",
       parentHonorEn: "Daughter of Mr. Chay Kimhong & Mrs. Ngat Sina",
       quoteKm: "«ក្តីស្រឡាញ់ដ៏កក់ក្តៅរបស់បង ជាជម្រកដ៏មានសុភមង្គលបំផុតរបស់អូន»",
       quoteEn: "“In your gentle warmth, I found my forever home and true happiness.”"
@@ -67,8 +63,8 @@ export const weddingData = {
   date: "2026-12-13T07:00:00+07:00",
   dateIsPlaceholder: false,
   lunar: {
-    km: "ត្រូវនឹងថ្ងៃសុក្រ ៤កើត ខែមិគសិរ ឆ្នាំមមី អដ្ឋស័ក ព.ស. ២៥៧០",
-    en: "4th waxing day of Migasira, Year of the Horse, B.E. 2570"
+    km: "ថ្ងៃអាទិត្យ ៤កើត ខែមិគសិរ ឆ្នាំមមី អដ្ឋស័ក ព.ស. ២៥៧០",
+    en: "Sunday, 4th waxing day of Migasira, Year of the Horse, B.E. 2570"
   },
 
   venue: {
@@ -97,8 +93,8 @@ export const weddingData = {
 
   programme: [
     {
-      km: "កម្មវិធីមង្គលការ ថ្ងៃសុក្រ ទី១៣ ខែធ្នូ ឆ្នាំ២០២៦",
-      en: "Wedding Ceremonies · Friday 13 December 2026",
+      km: "កម្មវិធីមង្គលការ ថ្ងៃអាទិត្យ ទី១៣ ខែធ្នូ ឆ្នាំ២០២៦",
+      en: "Wedding Ceremonies · Sunday 13 December 2026",
       rows: [
         {
           t: "06:30",

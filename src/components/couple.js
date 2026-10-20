@@ -12,16 +12,13 @@ export function renderCouple(container, { wedding, lang = "km" }) {
   const gParents = wedding.families?.groom;
   const bParents = wedding.families?.bride;
 
-  const groomTitle = isKm ? (groom.titleKm || "លោក") : (groom.titleEn || "Mr.");
-  const brideTitle = isKm ? (bride.titleKm || "អ្នកនាង") : (bride.titleEn || "Ms.");
-
   const groomHonor = isKm
-    ? (groom.parentHonorKm || (gParents ? `បុត្រ ${gParents.father.km} និង ${gParents.mother.km}` : "បុត្រ លោក ................... និង លោកស្រី ....."))
-    : (groom.parentHonorEn || (gParents ? `Son of ${gParents.father.en} & ${gParents.mother.en}` : "Son of ..."));
+    ? (groom.parentHonorKm || (gParents ? `ជាកូនប្រុសរបស់ ${gParents.father.km} និង ${gParents.mother.km}` : ""))
+    : (groom.parentHonorEn || (gParents ? `Son of ${gParents.father.en} & ${gParents.mother.en}` : ""));
 
   const brideHonor = isKm
-    ? (bride.parentHonorKm || (bParents ? `បុត្រី ${bParents.father.km} និង ${bParents.mother.km}` : "បុត្រី លោក ................... និង លោកស្រី ....."))
-    : (bride.parentHonorEn || (bParents ? `Daughter of ${bParents.father.en} & ${bParents.mother.en}` : "Daughter of ..."));
+    ? (bride.parentHonorKm || (bParents ? `ជាកូនស្រីរបស់ ${bParents.father.km} និង ${bParents.mother.km}` : ""))
+    : (bride.parentHonorEn || (bParents ? `Daughter of ${bParents.father.en} & ${bParents.mother.en}` : ""));
 
   container.innerHTML = `
     <section class="sec sec-couple" id="couple" aria-label="The Bride and Groom">
@@ -47,9 +44,11 @@ export function renderCouple(container, { wedding, lang = "km" }) {
             </div>
           </div>
           <div class="couple-card__info">
-            <h3 class="couple-card__name foil">${groomTitle} ${groom[lang]}</h3>
+            <span class="couple-card__role">${groom[isKm ? "roleKm" : "roleEn"] || (isKm ? "កូនកំលោះ" : "Groom")}</span>
+            <h3 class="couple-card__name foil">${groom[lang]}</h3>
             <p class="couple-card__en">${groom.en}</p>
-            <p class="couple-card__parents">${groomHonor}</p>
+            ${groomHonor ? `<p class="couple-card__parents">${groomHonor}</p>` : ""}
+            ${groom[isKm ? "quoteKm" : "quoteEn"] ? `<blockquote class="couple-card__quote">${groom[isKm ? "quoteKm" : "quoteEn"]}</blockquote>` : ""}
           </div>
         </article>
 
@@ -68,9 +67,11 @@ export function renderCouple(container, { wedding, lang = "km" }) {
             </div>
           </div>
           <div class="couple-card__info">
-            <h3 class="couple-card__name foil">${brideTitle} ${bride[lang]}</h3>
+            <span class="couple-card__role">${bride[isKm ? "roleKm" : "roleEn"] || (isKm ? "កូនក្រមុំ" : "Bride")}</span>
+            <h3 class="couple-card__name foil">${bride[lang]}</h3>
             <p class="couple-card__en">${bride.en}</p>
-            <p class="couple-card__parents">${brideHonor}</p>
+            ${brideHonor ? `<p class="couple-card__parents">${brideHonor}</p>` : ""}
+            ${bride[isKm ? "quoteKm" : "quoteEn"] ? `<blockquote class="couple-card__quote">${bride[isKm ? "quoteKm" : "quoteEn"]}</blockquote>` : ""}
           </div>
         </article>
       </div>

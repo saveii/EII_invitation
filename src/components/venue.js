@@ -98,10 +98,11 @@ function downloadIcsCalendar(wedding, lang) {
 
   const loc = `${wedding.venue.name[lang]}, ${wedding.venue.address[lang]}`;
 
-  // Start Date: 2026-12-13T07:00:00+07:00 (UTC: 20261213T000000Z)
-  // End Date: 2026-12-13T22:00:00+07:00 (UTC: 20261213T150000Z)
-  const dtStart = "20261213T000000Z";
-  const dtEnd = "20261213T150000Z";
+  const dStart = new Date(wedding.date);
+  const pad = (n) => String(n).padStart(2, "0");
+  const dtStart = `${dStart.getUTCFullYear()}${pad(dStart.getUTCMonth() + 1)}${pad(dStart.getUTCDate())}T${pad(dStart.getUTCHours())}${pad(dStart.getUTCMinutes())}00Z`;
+  const dEnd = new Date(dStart.getTime() + 15 * 3600 * 1000);
+  const dtEnd = `${dEnd.getUTCFullYear()}${pad(dEnd.getUTCMonth() + 1)}${pad(dEnd.getUTCDate())}T${pad(dEnd.getUTCHours())}${pad(dEnd.getUTCMinutes())}00Z`;
 
   const icsContent = [
     "BEGIN:VCALENDAR",

@@ -12,11 +12,12 @@ import {
   createWaxSealSvg
 } from "./ornaments.js";
 import { playSound, toggleMusic } from "./audio.js";
+import { formatDate } from "../data/i18n.js";
 
 export function mountEnvelope(container, { wedding, lang = "km", onOpenStart, onOpenComplete }) {
   const groomShort = wedding.couple.groom[lang === "km" ? "shortKm" : "shortEn"] || wedding.couple.groom.km;
   const brideShort = wedding.couple.bride[lang === "km" ? "shortKm" : "shortEn"] || wedding.couple.bride.km;
-  const dateFormatted = lang === "km" ? "១៣ · ១២ · ២០២៦" : "13 · 12 · 2026";
+  const dateFormatted = formatDate(wedding.date, lang).short;
   const kickerText = lang === "km" ? "សិរីសួស្តីអាពាហ៍ពិពាហ៍" : "The Wedding Invitation";
   const inviteText = lang === "km" ? "សូមគោរពអញ្ជើញ" : "Cordially Invites You";
 

@@ -150,7 +150,7 @@ export function renderWishes(container, { wedding, lang = "km" }) {
             : "We wholeheartedly thank you for being a cherished part of our love story and sharing in our joy!"}
         </p>
         <div class="finale-couple-sign foil">
-          ${wedding.couple.groom.shortKm} & ${wedding.couple.bride.shortKm}
+          ${isKm ? wedding.couple.groom.shortKm : wedding.couple.groom.shortEn} & ${isKm ? wedding.couple.bride.shortKm : wedding.couple.bride.shortEn}
         </div>
       </div>
 

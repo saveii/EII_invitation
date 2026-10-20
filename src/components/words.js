@@ -4,6 +4,7 @@
  */
 
 import { createCrestSvg, createDividerSvg } from "./ornaments.js";
+import { formatDate } from "../data/i18n.js";
 
 export function renderWords(container, { wedding, lang = "km" }) {
   const gParents = wedding.families.groom;
@@ -85,8 +86,8 @@ export function renderWords(container, { wedding, lang = "km" }) {
         <div class="sec-words__schedule-box">
           <p class="sec-words__when">
             ${isKm
-              ? `ពិសាភោជនាហារប្រព្រឹត្តនៅ <strong>${wedding.lunar.km}</strong> ត្រូវនឹង <strong>ថ្ងៃអាទិត្យ ទី១៣ ខែធ្នូ ឆ្នាំ២០២៦</strong> វេលាម៉ោង <strong>៥:០០ ល្ងាច</strong> ស្ថិតនៅ${wedding.venue.name.km} ${wedding.venue.address.km} ដោយមេត្រីភាព។`
-              : `The wedding celebration will be held on <strong>Sunday, 13 December 2026</strong> at <strong>5:00 PM</strong> at ${wedding.venue.name.en}, ${wedding.venue.address.en}.`}
+              ? `ពិសាភោជនាហារប្រព្រឹត្តនៅ <strong>${wedding.lunar.km}</strong> ត្រូវនឹង <strong>${formatDate(wedding.date, "km").weekday} ${formatDate(wedding.date, "km").date}</strong> វេលាម៉ោង <strong>${formatDate(wedding.date, "km").time.replace("ម៉ោង ", "")}</strong> ស្ថិតនៅ <strong>${wedding.venue.name.km}</strong> ${wedding.venue.address.km} ដោយមេត្រីភាព។`
+              : `The wedding celebration will be held on <strong>${formatDate(wedding.date, "en").weekday}, ${formatDate(wedding.date, "en").date}</strong> at <strong>${formatDate(wedding.date, "en").time}</strong> at <strong>${wedding.venue.name.en}</strong>, ${wedding.venue.address.en}.`}
           </p>
           <p class="sec-words__gratitude">
             ${isKm ? "វត្តមានដ៏ឧត្តុង្គឧត្តមរបស់លោកអ្នក ជាកិត្តិយសដ៏ខ្ពង់ខ្ពស់បំផុតសម្រាប់គ្រួសារយើងខ្ញុំ!" : "Your presence will be our greatest honor and happiness!"}
