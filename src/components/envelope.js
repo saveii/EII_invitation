@@ -11,7 +11,7 @@ import {
   createNameLogoLockup,
   createWaxSealSvg
 } from "./ornaments.js";
-import { playSound, toggleMusic } from "./audio.js";
+import { toggleMusic } from "./audio.js";
 import { formatDate } from "../data/i18n.js";
 
 export function mountEnvelope(container, { wedding, lang = "km", onOpenStart, onOpenComplete }) {
@@ -183,9 +183,7 @@ function initEnvelopeInteractions({ wedding, onOpenStart, onOpenComplete }) {
 
     gate.classList.add("is-opening");
 
-    // Tactile Audio triggers
-    playSound("paper");
-    setTimeout(() => playSound("chime"), 900);
+    // Play Khmer wedding background music directly
     toggleMusic(true, wedding.music);
 
     if (navigator.vibrate) {

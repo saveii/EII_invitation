@@ -154,26 +154,23 @@ export function stopAmbientRhythm() {
 
 export async function toggleMusic(play, url) {
   isMusicPlaying = play;
+  const audioSrc = url || "/audio/wedding-melody.mp3";
+
   if (play) {
-    getAudioContext();
-    if (url) {
-      if (!bgMusicAudio) {
-        bgMusicAudio = new Audio(url);
-        bgMusicAudio.loop = true;
-        bgMusicAudio.volume = 0.55;
-      }
-      bgMusicAudio.play().catch(() => {
-        // Fallback to synthesized ambient music if audio file not supported or blocked
-        startAmbientRhythm();
-      });
-    } else {
-      startAmbientRhythm();
+    if (!bgMusicAudio) {
+      bgMusicAudio = new Audio(audioSrc);
+      bgMusicAudio.loop = true;
+      bgMusicAudio.volume = 0.6;
+    }
+    try {
+      await bgMusicAudio.play();
+    } catch (err) {
+      console.warn("Audio play blocked or waiting for user gesture:", err);
     }
   } else {
     if (bgMusicAudio) {
       bgMusicAudio.pause();
     }
-    stopAmbientRhythm();
   }
   return isMusicPlaying;
 }
