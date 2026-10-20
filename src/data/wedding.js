@@ -231,5 +231,5 @@ export const weddingData = {
   candlelightPhoto: "/images/candlelight.jpg",
   heroPhoto: "/images/couple.jpg",
   music: "/audio/wedding-melody.mp3",
-  siteUrl: "https://theapka-wedding.vercel.app"
+  siteUrl: "https://eii-invitation.vercel.app"
 };
