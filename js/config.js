@@ -8,24 +8,24 @@
 const DEFAULT_WEDDING_CONFIG = {
   // ព័ត៌មានទូទៅ
   groom: {
-    nameKh: "ទេព សុធា",
-    nameEn: "TEP SOTHEA",
-    fatherKh: "លោក ទេព សុខា",
-    motherKh: "លោកស្រី ម៉ៅ សុភី",
+    nameKh: "ដា រ៉ា",
+    nameEn: "DA RAI",
+    fatherKh: "លោក ហែម ណារិទ្ធិ",
+    motherKh: "លោកស្រី ផន សាម៉េត",
     roleKh: "កូនប្រុស",
     photo: "images/couple.jpg"
   },
   bride: {
-    nameKh: "ចាយ វិច្ឆិកា",
-    nameEn: "CHAY VICHEKA",
-    fatherKh: "លោក ចាយ គឹមហុង",
-    motherKh: "លោកស្រី ង៉ែត ស៊ីណា",
+    nameKh: "កែវ សុវណ្ណារី",
+    nameEn: "KAO SOVANNAREI",
+    fatherKh: "លោក កែវ សុវណ្ណារា",
+    motherKh: "លោកស្រី សេង ភក្តី",
     roleKh: "កូនស្រី",
-    photo: "images/couple.jpg"
+    photo: "images/VDYA8084.JPG"
   },
 
   // រូបថតគូស្នេហ៍ចម្បង (Hero Couple Photo)
-  heroPhoto: "images/couple.jpg",
+  heroPhoto: "images/VDYA8084.JPG",
 
   // កាលបរិច្ឆេទកម្មវិធី
   eventDate: {
