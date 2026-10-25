@@ -7,11 +7,11 @@ echo ========================================================
 echo   E-WEDDING INVITATION - AUTOMATIC GITHUB UPDATER
 echo ========================================================
 echo.
-echo [1/3] Adding modified config files...
-git add js/config.js package.json updater.bat
+echo [1/3] Adding modified files...
+git add -A
 echo.
 echo [2/3] Committing changes...
-git commit -m "Update wedding invitation info"
+git commit -m "Update wedding invitation info and deployment"
 echo.
 echo [3/3] Pushing to GitHub & updating GitHub Pages...
 git push origin main
