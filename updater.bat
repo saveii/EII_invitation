@@ -13,18 +13,17 @@ echo.
 echo [2/3] Committing changes...
 git commit -m "Update wedding invitation info and deployment"
 echo.
-echo [3/3] Pushing to GitHub & updating GitHub Pages...
+echo [3/3] Pushing to GitHub...
 git push origin main
 echo.
 if %ERRORLEVEL% equ 0 (
     echo ========================================================
-    echo  [✓] ជោគជ័យ! ព័ត៌មានត្រូវបានបញ្ជូនទៅកាន់ GitHub រួចរាល់!
-    echo  គេហទំព័រ Live នឹង Update ក្នុងរយៈពេល 1 ទៅ 2 នាទី៖
-    echo  https://saveii.github.io/EII_invitation/
+    echo  [OK] Successfully pushed to GitHub!
+    echo  Live URL: https://saveii.github.io/EII_invitation/
     echo ========================================================
 ) else (
     echo ========================================================
-    echo  [!] សូមពិនិត្យមើលសារខាងលើ (ប្រសិនបើ GitHub ទាមទារ Login សូម Sign In)
+    echo  [!] Push failed or nothing to push. Please check above.
     echo ========================================================
 )
 echo.
