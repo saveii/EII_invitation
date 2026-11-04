@@ -1,228 +1,486 @@
 /**
  * Cover / Hero Section & Atmospheric Particle Embers
+ * Matching PSB Target Design with Admin Guest Name Personalization & Clean Share Links
  */
 
 import gsap from "gsap";
-import {
-  createCornerSvg,
-  createCrestSvg,
-  createNameLogoLockup
-} from "./ornaments.js";
-import { formatDate } from "../data/i18n.js";
 
 export function renderCover(container, { wedding, lang = "km" }) {
-  const groomShort = wedding.couple.groom[lang === "km" ? "shortKm" : "shortEn"] || wedding.couple.groom.km;
-  const brideShort = wedding.couple.bride[lang === "km" ? "shortKm" : "shortEn"] || wedding.couple.bride.km;
   const groomFull = wedding.couple.groom[lang === "km" ? "km" : "en"];
   const brideFull = wedding.couple.bride[lang === "km" ? "km" : "en"];
 
-  const dateObj = formatDate(wedding.date, lang);
-  const lunarText = wedding.lunar[lang] || "";
-  const venueText = `${wedding.venue.name[lang]} · ${wedding.venue.address[lang]}`;
+  // URL query parameter for personalized guest invitations (?to=... or ?guest=...)
+  const urlParams = new URLSearchParams(window.location.search);
+  const rawGuestParam = urlParams.get("to") || urlParams.get("guest") || urlParams.get("name") || "";
+  let decodedGuest = rawGuestParam.trim();
+  try {
+    decodedGuest = decodeURIComponent(decodedGuest);
+  } catch (e) {}
+
+  // Convert pluses and hyphens back to natural Khmer spaces for badge display
+  if (decodedGuest.includes("+")) {
+    decodedGuest = decodedGuest.replace(/\+/g, " ");
+  } else if (decodedGuest.includes("-") && !decodedGuest.includes(" ")) {
+    decodedGuest = decodedGuest.replace(/-/g, " ");
+  }
+
+  const isCustomGuest = !!decodedGuest.trim();
+  const defaultGuestTitle = lang === "km" ? "ភ្ញៀវកិត្តិយសទាំងអស់" : "All Valued Guests";
+  const guestName = isCustomGuest ? decodedGuest : defaultGuestTitle;
 
   container.innerHTML = `
     <section class="hero cover" id="hero" aria-label="Wedding invitation cover">
-      <div class="hero__media" id="hero-media">
-        <img src="${wedding.heroPhoto}" alt="${groomFull} & ${brideFull}" fetchpriority="high" />
-        <div class="hero__shade"></div>
-        <canvas class="hero__embers" id="hero-embers"></canvas>
+      <!-- Atmospheric Backdrop -->
+      <div class="hero__backdrop" style="background-image: url('${wedding.heroPhoto}');" aria-hidden="true"></div>
+      <canvas class="hero__embers" id="hero-embers"></canvas>
+
+      <!-- Unified Central Photo Card Stage (Locks text inside photo on all screens) -->
+      <div class="hero__stage" id="hero-stage">
+        <div class="hero__photo-box" id="hero-media">
+          <img class="hero__photo" src="${wedding.heroPhoto}" alt="${groomFull} & ${brideFull}" fetchpriority="high" />
+          <div class="hero__shade"></div>
+        </div>
+
+        <div class="cover__inner cover__inner--psb">
+          <div class="cover__top-block">
+            <div class="cover__kicker angkor-regular foil">${lang === "km" ? "សិរីសួស្តីអាពាហ៍ពិពាហ៍" : "We're Getting Married"}</div>
+            <div class="cover__sub">${lang === "km" ? "the wedding Invitation" : "The Wedding Invitation"}</div>
+          </div>
+
+          <div class="cover__bottom-block">
+            <div class="cover__invite-text">${lang === "km" ? "សូមគោរពអញ្ជើញ" : "Cordially Invites You"}</div>
+
+            <!-- Luxury Gold Badge with Dynamic / Admin Editable Guest Name -->
+            <div class="cover__guest-badge" id="guest-badge-wrap" role="button" tabindex="0" title="ចុចដើម្បីបញ្ចូល ឬកែប្រែឈ្មោះភ្ញៀវ (Admin)">
+              <img class="badge-frame-img" src="/images/guest-badge-empty.png" alt="Guest Badge Frame" />
+              <div class="badge-custom-name" id="badge-guest-name">${guestName}</div>
+              <span class="badge-edit-hint" aria-hidden="true">✍️ កែប្រែ</span>
+            </div>
+
+            <a class="cover__cue" href="#words">
+              <span>${lang === "km" ? "សូមរំកិលចុះ ដើម្បីទស្សនាធៀបការ" : "Scroll to explore"}</span>
+              <i></i>
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div class="cover__corners">
-        ${createCornerSvg("tl")}
-        ${createCornerSvg("tr")}
-        ${createCornerSvg("bl")}
-        ${createCornerSvg("br")}
-      </div>
+      <!-- Floating Admin Guest Trigger Button -->
+      <button class="admin-float-btn" id="admin-float-btn" type="button" aria-label="បញ្ចូលឈ្មោះភ្ញៀវ (Admin)">
+        <span class="admin-float-btn__icon">✍️</span>
+        <span class="admin-float-btn__text">បញ្ចូលឈ្មោះភ្ញៀវ</span>
+      </button>
 
-      <div class="cover__inner">
-        <div class="cover__crest">
-          ${createCrestSvg()}
+      <!-- Admin Guest Personalization Modal -->
+      <div class="admin-modal" id="admin-guest-modal" aria-hidden="true">
+        <div class="admin-modal__backdrop" id="admin-modal-backdrop"></div>
+        <div class="admin-modal__dialog">
+          <button type="button" class="admin-modal__close" id="admin-modal-close" aria-label="បិទ">✕</button>
+
+          <div class="admin-modal__header">
+            <div class="admin-modal__badge">ADMIN TOOL</div>
+            <h3 class="admin-modal__title">បញ្ចូលឈ្មោះហៅភ្ញៀវកិត្តិយស</h3>
+            <p class="admin-modal__sub">វាយឈ្មោះភ្ញៀវដើម្បីឱ្យបង្ហាញក្នុងស៊ុមមាស និងបង្កើតសារអញ្ជើញស្អាត (មានតែអក្សរខ្មែរ ចុចចូលបានភ្លាម)</p>
+          </div>
+
+          <div class="admin-modal__body">
+            <label for="admin-guest-input" class="admin-modal__label">ឈ្មោះភ្ញៀវលើធៀបការ៖</label>
+            <div class="admin-modal__input-wrap">
+              <input type="text" id="admin-guest-input" class="admin-modal__input" placeholder="ឧទាហរណ៍៖ ឯកឧត្តម និង លោកជំទាវ" value="${isCustomGuest ? guestName : ""}" />
+              <button type="button" id="admin-guest-clear" class="admin-modal__input-clear" title="លុបឈ្មោះ">✕</button>
+            </div>
+
+            <!-- Quick Title Chips -->
+            <div class="admin-modal__chips-label">ជ្រើសរើសងាររហ័ស (Quick Select)：</div>
+            <div class="admin-modal__chips">
+              <button type="button" class="admin-chip" data-name="ឯកឧត្តម និង លោកជំទាវ">ឯកឧត្តម និង លោកជំទាវ</button>
+              <button type="button" class="admin-chip" data-name="លោក និង លោកស្រី">លោក និង លោកស្រី</button>
+              <button type="button" class="admin-chip" data-name="លោកពូ និង អ្នកមីង">លោកពូ និង អ្នកមីង</button>
+              <button type="button" class="admin-chip" data-name="បងប្រុស និង បងស្រី">បងប្រុស និង បងស្រី</button>
+              <button type="button" class="admin-chip" data-name="មិត្តភក្តិ">មិត្តភក្តិ</button>
+              <button type="button" class="admin-chip admin-chip--reset" data-name="${defaultGuestTitle}">🔄 ${defaultGuestTitle}</button>
+            </div>
+
+            <!-- Live Message Preview (មានតែអក្សរខ្មែរ ចុចចូលបានភ្លាម) -->
+            <div class="admin-modal__preview-box">
+              <div class="admin-modal__preview-label">💌 ទម្រង់សារអញ្ជើញ (មានតែអក្សរខ្មែរ ចុចចូលបានភ្លាម)៖</div>
+              <div class="admin-modal__preview-card">
+                <div class="preview-msg-line preview-msg-salutation">សូមគោរពអញ្ជើញ <b id="preview-guest-name">${guestName}</b></div>
+                <div class="preview-msg-line">ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ <b>${groomFull} & ${brideFull}</b> 👰🤵</div>
+                <div class="preview-msg-link-line">
+                  👉 <span class="preview-msg-link">សូមចុចទីនេះដើម្បីទស្សនាធៀបការឌីជីថល</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clean Web Address Display -->
+            <div class="admin-modal__link-box">
+              <span class="admin-modal__link-label">🌐 តំណភ្ជាប់ផ្ទាល់ (Clean Web Link)៖</span>
+              <div class="admin-modal__link-display" id="admin-link-display">...</div>
+            </div>
+          </div>
+
+          <div class="admin-modal__actions">
+            <button type="button" id="admin-btn-copy-msg" class="admin-btn admin-btn--copy-msg" title="ចម្លងសារអញ្ជើញដែលមាន Link ភ្ជាប់លើអក្សរខ្មែរ ទៅ Paste ក្នុង Telegram/Messenger">
+              <i>📋</i> <span>ចម្លងសារអញ្ជើញ (Copy Message)</span>
+            </button>
+            <button type="button" id="admin-btn-telegram" class="admin-btn admin-btn--telegram" title="ផ្ញើតាម Telegram ជាមួយសារស្អាត">
+              <i>✈️</i> <span>ផ្ញើតាម Telegram</span>
+            </button>
+            <button type="button" id="admin-btn-copy-link" class="admin-btn admin-btn--copy-link" title="ចម្លងតែតំណភ្ជាប់ Link">
+              <i>🔗</i> <span>ចម្លងតែ Link</span>
+            </button>
+            <button type="button" id="admin-btn-apply" class="admin-btn admin-btn--apply">
+              <i>✅</i> <span>រួចរាល់ (Done)</span>
+            </button>
+          </div>
+
+          <div class="admin-modal__toast" id="admin-toast"></div>
         </div>
-        <div class="cover__kicker foil">${lang === "km" ? "សិរីសួស្តីអាពាហ៍ពិពាហ៍" : "We're Getting Married"}</div>
-        <div class="cover__sub">${lang === "km" ? "The Wedding Invitation" : "Official Digital Invitation"}</div>
-
-        <div class="cover__lockup">
-          ${createNameLogoLockup({
-            groom: groomShort,
-            bride: brideShort,
-            cls: "lk-cover",
-            crest: false
-          })}
-        </div>
-
-        <div class="hero__en" id="names-en">${wedding.couple.groom.en}  &  ${wedding.couple.bride.en}</div>
-
-        <div class="cover__invite">${lang === "km" ? "សូមគោរពអញ្ជើញ" : "Cordially Invites You"}</div>
-
-        <div class="cover__chips">
-          <div class="chip-d">
-            <small>${lang === "km" ? "ថ្ងៃ" : "Day"}</small>
-            <b>${dateObj.weekdayShort}</b>
-          </div>
-          <div class="chip-d">
-            <small>${lang === "km" ? "ទី" : "Date"}</small>
-            <b>${dateObj.day}</b>
-          </div>
-          <div class="chip-d">
-            <small>${lang === "km" ? "ខែ" : "Month"}</small>
-            <b>${dateObj.month}</b>
-          </div>
-          <div class="chip-d">
-            <small>${lang === "km" ? "ឆ្នាំ" : "Year"}</small>
-            <b>${dateObj.year}</b>
-          </div>
-        </div>
-
-        <div class="cover__lunar">${lunarText}</div>
-        <div class="cover__venue">${venueText}</div>
-
-        <a class="cover__cue" href="#words">
-          <span>${lang === "km" ? "សូមរំកិលចុះ ដើម្បីទស្សនាធៀបការ" : "Scroll to explore"}</span>
-          <i></i>
-        </a>
       </div>
     </section>
   `;
 
-  // Start Canvas Embers
+  // Start Falling Flower Petals & Embers Canvas
   const canvas = document.getElementById("hero-embers");
   if (canvas) {
-    initEmbers(canvas);
+    initPetalsAndEmbers(canvas);
   }
+
+  // Setup Admin Guest Modal Interactions
+  setupAdminGuestModal({ defaultGuestTitle, groomFull, brideFull, siteUrl: wedding.siteUrl });
 }
 
 export function animateCoverEntrance() {
   const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
-  tl.fromTo("#hero-media img", { scale: 1.04 }, { scale: 1.0, duration: 2.5 }, 0);
-  tl.from(".cover__corners .kbach-corner", { opacity: 0, scale: 0.7, duration: 1.2, stagger: 0.08 }, 0.2);
-  tl.from(".cover__crest", { opacity: 0, y: 20, duration: 1 }, 0.4);
-  tl.from(".cover__kicker, .cover__sub", { opacity: 0, y: 15, duration: 0.9, stagger: 0.1 }, 0.6);
-
-  // Logo lockup cinematic reveal
-  const lockup = document.querySelector(".cover__lockup");
-  if (lockup) {
-    tl.fromTo(".cover__lockup .lk-groom",
-      { clipPath: "inset(-20% 105% -20% -10%)" },
-      { clipPath: "inset(-20% -10% -20% -10%)", duration: 1.4, ease: "power2.inOut" },
-      0.8
-    );
-    tl.fromTo(".cover__lockup .lk-bride",
-      { clipPath: "inset(-20% 105% -20% -10%)" },
-      { clipPath: "inset(-20% -10% -20% -10%)", duration: 1.4, ease: "power2.inOut" },
-      1.1
-    );
-    tl.from(".cover__lockup .lk-swash", {
-      strokeDashoffset: 400,
-      strokeDasharray: 400,
-      duration: 1.4,
-      stagger: 0.2
-    }, 1.0);
-    tl.from(".cover__lockup .lk-heart", {
-      scale: 0,
-      transformOrigin: "50% 50%",
-      duration: 0.8,
-      ease: "back.out(2.2)"
-    }, 1.6);
-    tl.from(".cover__lockup .lk-butterfly", {
-      opacity: 0,
-      x: 50,
-      y: -40,
-      rotate: 35,
-      duration: 1.4,
-      ease: "power2.out"
-    }, 1.5);
-  }
-
-  tl.from("#names-en", { opacity: 0, y: 12, duration: 0.9 }, 1.8);
-  tl.from(".cover__invite", { opacity: 0, y: 12, duration: 0.9 }, 2.0);
-  tl.from(".cover__chips .chip-d", { opacity: 0, y: 22, duration: 0.8, stagger: 0.1 }, 2.2);
-  tl.from(".cover__lunar, .cover__venue, .cover__cue", { opacity: 0, y: 12, duration: 0.9, stagger: 0.1 }, 2.5);
-
-  // Gentle continuous breathing sway
-  gsap.to(".cover__corners .kb-sway", {
-    rotate: 2.2,
-    duration: 3.8,
-    yoyo: true,
-    repeat: -1,
-    ease: "sine.inOut"
-  });
-
-  gsap.to(".cover .lk-butterfly", {
-    y: -7,
-    x: 4,
-    duration: 2.4,
-    yoyo: true,
-    repeat: -1,
-    ease: "sine.inOut",
-    delay: 3
-  });
+  tl.fromTo("#hero-media .hero__photo", { opacity: 0.85, scale: 1.02 }, { opacity: 1, scale: 1.0, duration: 2.2 }, 0);
+  tl.from(".cover__top-block", { opacity: 0, y: -22, duration: 1.2, ease: "power2.out" }, 0.3);
+  tl.from(".cover__bottom-block", { opacity: 0, y: 24, duration: 1.2, ease: "power2.out" }, 0.6);
 }
 
-function initEmbers(canvas) {
+function setupAdminGuestModal({ defaultGuestTitle, groomFull, brideFull, siteUrl }) {
+  const modal = document.getElementById("admin-guest-modal");
+  const backdrop = document.getElementById("admin-modal-backdrop");
+  const closeBtn = document.getElementById("admin-modal-close");
+  const floatBtn = document.getElementById("admin-float-btn");
+  const badgeWrap = document.getElementById("guest-badge-wrap");
+  const badgeNameEl = document.getElementById("badge-guest-name");
+  const input = document.getElementById("admin-guest-input");
+  const clearBtn = document.getElementById("admin-guest-clear");
+  const linkDisplay = document.getElementById("admin-link-display");
+  const previewGuestName = document.getElementById("preview-guest-name");
+  const copyMsgBtn = document.getElementById("admin-btn-copy-msg");
+  const copyLinkBtn = document.getElementById("admin-btn-copy-link");
+  const telegramBtn = document.getElementById("admin-btn-telegram");
+  const applyBtn = document.getElementById("admin-btn-apply");
+  const toast = document.getElementById("admin-toast");
+  const chips = document.querySelectorAll(".admin-chip");
+
+  if (!modal || !input) return;
+
+  // Base production/public web address for sharing
+  const getBaseDomain = () => {
+    const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    if (isLocalhost && siteUrl) {
+      return siteUrl.replace(/\/$/, "");
+    }
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  };
+
+  // Build clean, human-readable URL without ugly %E1%9E percent-encoding
+  const getGuestShareUrl = (nameVal) => {
+    const trimmed = (nameVal || "").trim();
+    const base = getBaseDomain();
+    if (!trimmed || trimmed === defaultGuestTitle) {
+      return base;
+    }
+    // Use `+` for spaces so the link stays as a clean, single unbroken clickable URL
+    const param = trimmed.replace(/\s+/g, "+");
+    return `${base}/?to=${param}`;
+  };
+
+  const getInvitationTexts = (nameVal) => {
+    const guest = (nameVal || "").trim() || defaultGuestTitle;
+    const shareUrl = getGuestShareUrl(guest);
+
+    // 1. Rich HTML: When pasted into Telegram, Messenger, Notes, Word, etc.,
+    // it renders purely in Khmer with a blue clickable link! (No raw URL visible)
+    const richHtml = `
+      <p style="font-family: sans-serif; font-size: 15px; color: #1f2937; line-height: 1.6;">
+        សូមគោរពអញ្ជើញ <b>${guest}</b><br>
+        ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ <b>${groomFull} & ${brideFull}</b> 👰🤵
+      </p>
+      <p style="font-family: sans-serif; font-size: 15px;">
+        👉 <a href="${shareUrl}" style="color: #2563eb; font-weight: bold; text-decoration: underline;">សូមចុចទីនេះដើម្បីទស្សនាធៀបការឌីជីថល</a>
+      </p>
+    `.trim();
+
+    // 2. Clean Plain text fallback: Clean single URL with Khmer characters (NOT %E1%9E...)
+    const plainText = `សូមគោរពអញ្ជើញ ${guest}
+ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ ${groomFull} & ${brideFull} 👰🤵
+
+👉 សូមចុចតំណភ្ជាប់ដើម្បីទស្សនាធៀបការឌីជីថល៖
+${shareUrl}`;
+
+    return { guest, shareUrl, richHtml, plainText };
+  };
+
+  const updateGeneratedLink = (nameVal) => {
+    const trimmed = (nameVal || "").trim();
+    const displayGuest = trimmed || defaultGuestTitle;
+
+    // Update Hero badge live
+    if (badgeNameEl) {
+      badgeNameEl.textContent = displayGuest;
+      const len = displayGuest.length;
+      if (len > 35) {
+        badgeNameEl.style.fontSize = "clamp(0.68rem, 1.8vw, 0.88rem)";
+      } else if (len > 24) {
+        badgeNameEl.style.fontSize = "clamp(0.78rem, 2.1vw, 1.02rem)";
+      } else {
+        badgeNameEl.style.fontSize = "";
+      }
+    }
+
+    // Update modal live preview
+    if (previewGuestName) {
+      previewGuestName.textContent = displayGuest;
+    }
+
+    // Update clean URL display
+    if (linkDisplay) {
+      linkDisplay.textContent = getGuestShareUrl(trimmed);
+    }
+  };
+
+  const showToast = (msg) => {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("is-visible");
+    setTimeout(() => {
+      toast.classList.remove("is-visible");
+    }, 2800);
+  };
+
+  const openModal = () => {
+    modal.classList.add("is-active");
+    modal.setAttribute("aria-hidden", "false");
+    updateGeneratedLink(input.value);
+    input.focus();
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("is-active");
+    modal.setAttribute("aria-hidden", "true");
+  };
+
+  // Triggers
+  if (floatBtn) floatBtn.addEventListener("click", openModal);
+  if (badgeWrap) badgeWrap.addEventListener("click", openModal);
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (backdrop) backdrop.addEventListener("click", closeModal);
+
+  // Input typing real-time update
+  input.addEventListener("input", () => {
+    updateGeneratedLink(input.value);
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      updateGeneratedLink("");
+      input.focus();
+    });
+  }
+
+  // Quick Chips
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      const chipName = chip.dataset.name || "";
+      if (chipName === defaultGuestTitle) {
+        input.value = "";
+      } else {
+        input.value = chipName;
+      }
+      updateGeneratedLink(input.value);
+      input.focus();
+    });
+  });
+
+  // 1. Copy Formatted Khmer Message (Rich text with clickable link)
+  if (copyMsgBtn) {
+    copyMsgBtn.addEventListener("click", async () => {
+      const { richHtml, plainText } = getInvitationTexts(input.value);
+      let copied = false;
+
+      if (navigator.clipboard && window.ClipboardItem) {
+        try {
+          const blobHtml = new Blob([richHtml], { type: "text/html" });
+          const blobPlain = new Blob([plainText], { type: "text/plain" });
+          const item = new ClipboardItem({
+            "text/html": blobHtml,
+            "text/plain": blobPlain
+          });
+          await navigator.clipboard.write([item]);
+          copied = true;
+        } catch (err) {
+          console.warn("ClipboardItem rich text write failed:", err);
+        }
+      }
+
+      if (!copied) {
+        try {
+          await navigator.clipboard.writeText(plainText);
+          copied = true;
+        } catch (err) {
+          const textarea = document.createElement("textarea");
+          textarea.value = plainText;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+          copied = true;
+        }
+      }
+
+      showToast("✅ បានចម្លងសារអញ្ជើញ! អាច Paste ក្នុង Telegram/Messenger បាន");
+    });
+  }
+
+  // 2. Telegram Share Button (Clean message + Single Clean Link, NO DUPLICATE, NO %E1%9E...)
+  if (telegramBtn) {
+    telegramBtn.addEventListener("click", () => {
+      const { guest, shareUrl } = getInvitationTexts(input.value);
+
+      // Telegram will automatically display the `url` parameter once as a clickable link
+      // and generate the rich card preview.
+      // Therefore, we do NOT repeat the URL in the `text` parameter!
+      const caption = `សូមគោរពអញ្ជើញ ${guest}\nចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ ${groomFull} & ${brideFull} 👰🤵`;
+      const tgUrl = `https://t.me/share/url?url=${encodeURI(shareUrl)}&text=${encodeURIComponent(caption)}`;
+      window.open(tgUrl, "_blank");
+    });
+  }
+
+  // 3. Copy Link Only
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener("click", async () => {
+      const { shareUrl } = getInvitationTexts(input.value);
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+      } catch (err) {
+        const textarea = document.createElement("textarea");
+        textarea.value = shareUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+      showToast("✅ បានចម្លងតែតំណភ្ជាប់ (Link) ដោយជោគជ័យ!");
+    });
+  }
+
+  // 4. Apply & Close
+  if (applyBtn) {
+    applyBtn.addEventListener("click", () => {
+      const name = input.value.trim();
+      const newUrl = new URL(window.location.href);
+      if (name && name !== defaultGuestTitle) {
+        newUrl.searchParams.set("to", name.replace(/\s+/g, "+"));
+      } else {
+        newUrl.searchParams.delete("to");
+        newUrl.searchParams.delete("guest");
+        newUrl.searchParams.delete("name");
+      }
+      window.history.replaceState({}, "", newUrl.toString());
+      closeModal();
+    });
+  }
+
+  // Initialize display
+  updateGeneratedLink(input.value);
+}
+
+function initPetalsAndEmbers(canvas) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
   let width = 0;
   let height = 0;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const particles = [];
-  const count = 32;
 
   const resize = () => {
-    width = canvas.parentElement.offsetWidth;
-    height = canvas.parentElement.offsetHeight;
+    width = canvas.parentElement ? canvas.parentElement.offsetWidth : window.innerWidth;
+    height = canvas.parentElement ? canvas.parentElement.offsetHeight : window.innerHeight;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
 
-  const createParticle = (spawnEverywhere = false) => ({
-    x: Math.random() * width,
-    y: spawnEverywhere ? Math.random() * height : height + 10,
-    r: 0.6 + Math.random() * 1.8,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: 0.2 + Math.random() * 0.5,
-    phase: Math.random() * Math.PI * 2,
-    life: 0.4 + Math.random() * 0.6
-  });
-
   resize();
   window.addEventListener("resize", resize);
 
-  for (let i = 0; i < count; i++) {
-    particles.push(createParticle(true));
-  }
+  // Gentle Falling Petals (កម្ទិចផ្កាធ្លាក់មកតិចៗៗ)
+  const PETAL_COUNT = 32;
+  const petals = [];
 
-  let animFrame;
-  const loop = (t) => {
-    animFrame = requestAnimationFrame(loop);
-    ctx.clearRect(0, 0, width, height);
-    ctx.globalCompositeOperation = "lighter";
-
-    for (const p of particles) {
-      p.y -= p.vy;
-      p.x += p.vx + Math.sin(t * 0.001 + p.phase) * 0.25;
-
-      if (p.y < -10) {
-        Object.assign(p, createParticle(false));
-      }
-
-      const fade = Math.min(1, (height - p.y) / (height * 0.2)) * Math.min(1, p.y / (height * 0.2));
-      const alpha = Math.max(0, fade) * p.life * (0.6 + 0.4 * Math.sin(t * 0.003 + p.phase));
-
-      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-      grad.addColorStop(0, `rgba(255, 238, 195, ${alpha})`);
-      grad.addColorStop(0.35, `rgba(217, 177, 90, ${alpha * 0.6})`);
-      grad.addColorStop(1, `rgba(255, 140, 60, 0)`);
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  const createPetal = (spawnEverywhere = false) => {
+    const isBlush = Math.random() > 0.42;
+    const isGolden = Math.random() < 0.18;
+    return {
+      x: Math.random() * width,
+      y: spawnEverywhere ? Math.random() * height : -20 - Math.random() * 50,
+      size: 6.5 + Math.random() * 9.5, // 6.5px to 16px
+      speedY: 0.55 + Math.random() * 0.75, // gentle slow fall
+      swaySpeed: 0.0012 + Math.random() * 0.0015,
+      swayAngle: Math.random() * Math.PI * 2,
+      swayWidth: 20 + Math.random() * 32,
+      rotX: Math.random() * Math.PI,
+      rotY: Math.random() * Math.PI,
+      rotSpeedX: 0.008 + Math.random() * 0.012,
+      rotSpeedY: 0.006 + Math.random() * 0.01,
+      color: isGolden ? "rgba(235, 195, 115, 0.75)" : isBlush ? "rgba(248, 222, 224, 0.78)" : "rgba(255, 255, 255, 0.82)"
+    };
   };
 
-  requestAnimationFrame(loop);
+  for (let i = 0; i < PETAL_COUNT; i++) {
+    petals.push(createPetal(true));
+  }
+
+  let animId;
+  const render = (time) => {
+    ctx.clearRect(0, 0, width, height);
+
+    petals.forEach(p => {
+      p.y += p.speedY;
+      p.swayAngle += p.swaySpeed * 16;
+      p.rotX += p.rotSpeedX;
+      p.rotY += p.rotSpeedY;
+
+      const currentX = p.x + Math.sin(p.swayAngle) * p.swayWidth;
+
+      if (p.y > height + 25) {
+        Object.assign(p, createPetal(false));
+      }
+
+      ctx.save();
+      ctx.translate(currentX, p.y);
+      ctx.rotate(Math.sin(p.rotX) * 0.4);
+      ctx.scale(Math.cos(p.rotX), Math.sin(p.rotY));
+
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.ellipse(0, 0, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    });
+
+    animId = requestAnimationFrame(render);
+  };
+
+  animId = requestAnimationFrame(render);
 }

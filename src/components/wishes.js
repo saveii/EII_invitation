@@ -20,7 +20,7 @@ const DEFAULT_WISHES = [
   {
     name: "Bunly & Mary",
     attendance: "wishes",
-    message: "Wishing Tep Sothea & Chay Vicheka a lifetime of love, laughter, and endless adventure together! Congratulations!",
+    message: "Wishing Da Rai & Kao Sovannarei a lifetime of love, laughter, and endless adventure together! Congratulations!",
     time: "៥ ម៉ោងមុន"
   }
 ];

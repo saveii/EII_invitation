@@ -3,6 +3,9 @@
    Centered iPhone 16 Frame matching Screenshots 1 to 4 exactly
    ==================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Metal&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap');
+
 :root {
   --primary-pink: #e61e4d;
   --primary-pink-soft: rgba(230, 30, 77, 0.1);
@@ -16,7 +19,7 @@
   --phone-text-muted: #6b7280;
   --phone-border: #e5e7eb;
 
-  --font-khmer-head: 'Moul', serif;
+  --font-khmer-head: 'Metal', serif;
   --font-khmer-body: 'Kantumruy Pro', sans-serif;
   --font-script: 'Great Vibes', cursive;
   --font-serif: 'Playfair Display', serif;

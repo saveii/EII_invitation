@@ -3,7 +3,7 @@
  * Individual portrait cards side-by-side, roles, names, and parent honors
  */
 
-import { createButterflySvg, createCornerSvg } from "./ornaments.js";
+import { createCornerSvg } from "./ornaments.js";
 
 export function renderCouple(container, { wedding, lang = "km" }) {
   const isKm = lang === "km";
@@ -25,7 +25,6 @@ export function renderCouple(container, { wedding, lang = "km" }) {
       <div class="sec-header">
         <span class="caps foil">${isKm ? "គូស្វាមីភរិយា" : "The Happy Couple"}</span>
         <h2 class="sec-title">${isKm ? "កូនកំលោះ និង កូនក្រមុំ" : "Groom & Bride"}</h2>
-        <div class="sec-butterfly-cue">${createButterflySvg("is-fluttering")}</div>
       </div>
 
       <div class="couple-grid">
@@ -46,7 +45,6 @@ export function renderCouple(container, { wedding, lang = "km" }) {
           <div class="couple-card__info">
             <span class="couple-card__role">${groom[isKm ? "roleKm" : "roleEn"] || (isKm ? "កូនកំលោះ" : "Groom")}</span>
             <h3 class="couple-card__name foil">${groom[lang]}</h3>
-            <p class="couple-card__en">${groom.en}</p>
             ${groomHonor ? `<p class="couple-card__parents">${groomHonor}</p>` : ""}
             ${groom[isKm ? "quoteKm" : "quoteEn"] ? `<blockquote class="couple-card__quote">${groom[isKm ? "quoteKm" : "quoteEn"]}</blockquote>` : ""}
           </div>
@@ -69,7 +67,6 @@ export function renderCouple(container, { wedding, lang = "km" }) {
           <div class="couple-card__info">
             <span class="couple-card__role">${bride[isKm ? "roleKm" : "roleEn"] || (isKm ? "កូនក្រមុំ" : "Bride")}</span>
             <h3 class="couple-card__name foil">${bride[lang]}</h3>
-            <p class="couple-card__en">${bride.en}</p>
             ${brideHonor ? `<p class="couple-card__parents">${brideHonor}</p>` : ""}
             ${bride[isKm ? "quoteKm" : "quoteEn"] ? `<blockquote class="couple-card__quote">${bride[isKm ? "quoteKm" : "quoteEn"]}</blockquote>` : ""}
           </div>
@@ -78,4 +75,3 @@ export function renderCouple(container, { wedding, lang = "km" }) {
     </section>
   `;
 }
-

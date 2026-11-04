@@ -15,6 +15,10 @@ export const khmerWeekdays = [
   'អាទិត្យ', 'ច័ន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍'
 ];
 
+export const khmerWeekdaysShort = [
+  'អាទិ', 'ច័ន្ទ', 'អង្គ', 'ពុធ', 'ព្រហ', 'សុក្រ', 'សៅរ៍'
+];
+
 export function parseDate(isoString) {
   const d = new Date(isoString);
   // UTC+7 offset calculation

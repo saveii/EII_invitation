@@ -13,7 +13,7 @@ const DEFAULT_WEDDING_CONFIG = {
     fatherKh: "លោក ហែម ណារិទ្ធិ",
     motherKh: "លោកស្រី ផន សាម៉េត",
     roleKh: "កូនប្រុស",
-    photo: "images/couple.jpg"
+    photo: "images/1.jpg"
   },
   bride: {
     nameKh: "កែវ សុវណ្ណារី",
@@ -21,19 +21,19 @@ const DEFAULT_WEDDING_CONFIG = {
     fatherKh: "លោក កែវ សុវណ្ណារា",
     motherKh: "លោកស្រី សេង ភក្តី",
     roleKh: "កូនស្រី",
-    photo: "images/VDYA8084.JPG"
+    photo: "images/2.jpg"
   },
 
   // រូបថតគូស្នេហ៍ចម្បង (Hero Couple Photo)
-  heroPhoto: "images/VDYA8084.JPG",
+  heroPhoto: "images/couple-hero.jpg",
 
   // កាលបរិច្ឆេទកម្មវិធី
   eventDate: {
     targetDateTime: "2026-12-13T07:00:00",
     dateKhmer: "ថ្ងៃសុក្រ ទី ១៣ ខែ ធ្នូ ឆ្នាំ ២០២៤",
     dateSolar: "ត្រូវនឹងថ្ងៃទី ១៣ ខែធ្នូ ឆ្នាំ២០២៤",
-    shortDate: "13 . 12 . 2024",
-    isoDate: "2024-12-13"
+    shortDate: "13 . 12 . 2026",
+    isoDate: "2026-12-13"
   },
 
   // ទីតាំងកម្មវិធី
@@ -41,7 +41,7 @@ const DEFAULT_WEDDING_CONFIG = {
     name: "គេហដ្ឋានខាងស្រី",
     hall: "រោងមង្គលជ័យ",
     address: "ភូមិត្រពាំងក្រសាំង ឃុំត្រាំកក់ ស្រុកត្រាំកក់ ខេត្តតាកែវ",
-    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3913.3456789!2d104.75!3d11.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDAzJzAwLjAiTiAxMDTCsDQ1JzAwLjAiRQ!5e0!3m2!1sen!2skh!4v1700000000000",
+    mapEmbedUrl: "https://www.google.com/maps/place/%E1%9E%8F%E1%9F%92%E1%9E%9A%E1%9E%BE%E1%9E%84/@12.0556886,105.3443382,15z/data=!3m1!4b1!4m6!3m5!1s0x310c3efec9ced657:0x4fae37f432eb8e97!8m2!3d12.0556778!4d105.3555652!16s%2Fg%2F1tj5n5fx?entry=ttu&g_ep=EgoyMDI2MTAyMC4wIKXMDSoASAFQAw%3D%3D",
     googleMapDirectLink: "https://maps.google.com/?q=Tram+Kork+Takeo+Cambodia"
   },
 
@@ -71,6 +71,7 @@ const DEFAULT_WEDDING_CONFIG = {
       title: "ពិធីកាត់សក់ បង្កក់សិរី",
       description: "ពិធីកាត់សក់ បង្កក់សិរី"
     },
+
     {
       id: "sch_5",
       time: "ម៉ោង 10:30 ព្រឹក",
@@ -232,7 +233,7 @@ const DEFAULT_WEDDING_CONFIG = {
   // គណនីទទួលចំណងដៃ / KHQR Gift
   khqr: {
     enabled: true,
-    receiverName: "TEP SOTHEA & CHAY VICHEKA",
+    receiverName: "DA RAI & KAO SOVANNAREI",
     bankName: "ABA Bank / Bakong KHQR",
     accountNumber: "001 234 567 (USD / KHR)",
     qrImageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://bakong.nbc.org.kh",
@@ -246,3 +247,6 @@ const DEFAULT_WEDDING_CONFIG = {
     description: "យើងខ្ញុំទាំងពីរព្រមទាំងក្រុមគ្រួសារទាំងសងខាង សូមថ្លែងអំណរគុណយ៉ាងជ្រាលជ្រៅបំផុតចំពោះវត្តមានដ៏ឧត្តុង្គឧត្តមរបស់ឯកឧត្តម លោកជំទាវ លោក លោកស្រី អ្នកនាងកញ្ញា ដែលបានអញ្ជើញចូលរួមជាសក្ខីភាព និងប្រសិទ្ធពរជ័យដល់យើងខ្ញុំ។"
   }
 };
+
+export { DEFAULT_WEDDING_CONFIG };
+export default DEFAULT_WEDDING_CONFIG;

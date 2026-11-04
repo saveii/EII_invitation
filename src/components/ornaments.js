@@ -232,8 +232,8 @@ export function createDividerSvg(extraClass = "") {
 // Groom's short name top-left, Bride's bottom-right in Moulpali gold foil,
 // joined by a flourish line, heart and butterfly under a small crest
 export function createNameLogoLockup({
-  groom = "សុធា",
-  bride = "វិច្ឆិកា",
+  groom = "ដារ៉ា",
+  bride = "សុវណ្ណារី",
   cls = "",
   crest = true
 } = {}) {

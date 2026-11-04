@@ -35,7 +35,6 @@ function renderAllSections(lang) {
     { id: "countdown-mount", fn: renderCountdown },
     { id: "programme-mount", fn: renderProgramme },
     { id: "story-mount", fn: renderStory },
-    { id: "candlelight-mount", fn: renderCandlelight },
     { id: "gallery-mount", fn: renderGallery },
     { id: "venue-mount", fn: renderVenue },
     { id: "gift-mount", fn: renderGift },
@@ -154,6 +153,11 @@ function initHUD() {
 function init() {
   initLenis();
   initHUD();
+
+  const gateBgImg = document.querySelector(".gate__bg img");
+  if (gateBgImg && weddingData.heroPhoto) {
+    gateBgImg.src = weddingData.heroPhoto;
+  }
 
   const envMount = document.getElementById("env-mount");
 
