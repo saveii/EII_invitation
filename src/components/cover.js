@@ -101,14 +101,15 @@ export function renderCover(container, { wedding, lang = "km" }) {
               <button type="button" class="admin-chip admin-chip--reset" data-name="${defaultGuestTitle}">🔄 ${defaultGuestTitle}</button>
             </div>
 
-            <!-- Live Message Preview (មានតែអក្សរខ្មែរ ចុចចូលបានភ្លាម) -->
+            <!-- Live Message Preview (រៀបរយ ស្អាត មិនរញ៉េរញ៉ៃ) -->
             <div class="admin-modal__preview-box">
-              <div class="admin-modal__preview-label">💌 ទម្រង់សារអញ្ជើញ (មានតែអក្សរខ្មែរ ចុចចូលបានភ្លាម)៖</div>
+              <div class="admin-modal__preview-label">💌 ទម្រង់សារអញ្ជើញ (រៀបរយ ស្អាត មិនរញ៉េរញ៉ៃ)៖</div>
               <div class="admin-modal__preview-card">
                 <div class="preview-msg-line preview-msg-salutation">សូមគោរពអញ្ជើញ <b id="preview-guest-name">${guestName}</b></div>
                 <div class="preview-msg-line">ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ <b>${groomFull} & ${brideFull}</b> 👰🤵</div>
+                <div class="preview-msg-cue">សូមចុចតំណភ្ជាប់ខាងក្រោមដើម្បីទស្សនាធៀបការឌីជីថល៖</div>
                 <div class="preview-msg-link-line">
-                  👉 <span class="preview-msg-link">សូមចុចទីនេះដើម្បីទស្សនាធៀបការឌីជីថល</span>
+                  <span class="preview-msg-clean-url" id="preview-msg-url">...</span>
                 </div>
               </div>
             </div>
@@ -198,8 +199,9 @@ function setupAdminGuestModal({ defaultGuestTitle, groomFull, brideFull, siteUrl
     if (!trimmed || trimmed === defaultGuestTitle) {
       return base;
     }
-    // Use `+` for spaces so the link stays as a clean, single unbroken clickable URL
-    const param = trimmed.replace(/\s+/g, "+");
+    // Remove zero-width characters (invisible spaces) that keyboard might insert
+    const cleaned = trimmed.replace(/[\u200B\u200C\u200D\uFEFF]/g, "").trim();
+    const param = cleaned.replace(/\s+/g, "+");
     return `${base}/?to=${param}`;
   };
 
@@ -207,24 +209,27 @@ function setupAdminGuestModal({ defaultGuestTitle, groomFull, brideFull, siteUrl
     const guest = (nameVal || "").trim() || defaultGuestTitle;
     const shareUrl = getGuestShareUrl(guest);
 
-    // 1. Rich HTML: When pasted into Telegram, Messenger, Notes, Word, etc.,
-    // it renders purely in Khmer with a blue clickable link! (No raw URL visible)
-    const richHtml = `
-      <p style="font-family: sans-serif; font-size: 15px; color: #1f2937; line-height: 1.6;">
-        សូមគោរពអញ្ជើញ <b>${guest}</b><br>
-        ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ <b>${groomFull} & ${brideFull}</b> 👰🤵
-      </p>
-      <p style="font-family: sans-serif; font-size: 15px;">
-        👉 <a href="${shareUrl}" style="color: #2563eb; font-weight: bold; text-decoration: underline;">សូមចុចទីនេះដើម្បីទស្សនាធៀបការឌីជីថល</a>
-      </p>
-    `.trim();
-
-    // 2. Clean Plain text fallback: Clean single URL with Khmer characters (NOT %E1%9E...)
+    // 1. Plain text format exactly as requested:
+    // Greeting & couple names first, call to action, and the clean link below it!
     const plainText = `សូមគោរពអញ្ជើញ ${guest}
 ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ ${groomFull} & ${brideFull} 👰🤵
 
-👉 សូមចុចតំណភ្ជាប់ដើម្បីទស្សនាធៀបការឌីជីថល៖
+សូមចុចតំណភ្ជាប់ខាងក្រោមដើម្បីទស្សនាធៀបការឌីជីថល៖
 ${shareUrl}`;
+
+    // 2. Rich HTML for pasting in formatted chat apps
+    const richHtml = `
+      <p style="font-family: sans-serif; font-size: 15px; color: #1f2937; line-height: 1.6; margin: 0 0 10px 0;">
+        សូមគោរពអញ្ជើញ <b>${guest}</b><br>
+        ចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ <b>${groomFull} & ${brideFull}</b> 👰🤵
+      </p>
+      <p style="font-family: sans-serif; font-size: 14px; color: #374151; margin: 0 0 6px 0;">
+        សូមចុចតំណភ្ជាប់ខាងក្រោមដើម្បីទស្សនាធៀបការឌីជីថល៖
+      </p>
+      <p style="font-family: sans-serif; font-size: 14px; margin: 0;">
+        👉 <a href="${shareUrl}" style="color: #2563eb; font-weight: bold; text-decoration: underline;">${shareUrl}</a>
+      </p>
+    `.trim();
 
     return { guest, shareUrl, richHtml, plainText };
   };
@@ -249,6 +254,10 @@ ${shareUrl}`;
     // Update modal live preview
     if (previewGuestName) {
       previewGuestName.textContent = displayGuest;
+    }
+    const previewUrlEl = document.getElementById("preview-msg-url");
+    if (previewUrlEl) {
+      previewUrlEl.textContent = getGuestShareUrl(trimmed);
     }
 
     // Update clean URL display
@@ -351,16 +360,14 @@ ${shareUrl}`;
     });
   }
 
-  // 2. Telegram Share Button (Clean message + Single Clean Link, NO DUPLICATE, NO %E1%9E...)
+  // 2. Telegram Share Button (Greeting -> Couple -> Prompt -> Clean Link)
   if (telegramBtn) {
     telegramBtn.addEventListener("click", () => {
-      const { guest, shareUrl } = getInvitationTexts(input.value);
-
-      // Telegram will automatically display the `url` parameter once as a clickable link
-      // and generate the rich card preview.
-      // Therefore, we do NOT repeat the URL in the `text` parameter!
-      const caption = `សូមគោរពអញ្ជើញ ${guest}\nចូលរួមពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ ${groomFull} & ${brideFull} 👰🤵`;
-      const tgUrl = `https://t.me/share/url?url=${encodeURI(shareUrl)}&text=${encodeURIComponent(caption)}`;
+      const { plainText } = getInvitationTexts(input.value);
+      // Pass full formatted message inside `text` without top `url` parameter.
+      // This ensures the greeting is at the top, the prompt is in the middle,
+      // and the clean link is at the bottom (never duplicated at the top).
+      const tgUrl = `https://t.me/share/url?text=${encodeURIComponent(plainText)}`;
       window.open(tgUrl, "_blank");
     });
   }
